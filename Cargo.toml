@@ -1,0 +1,7 @@
+[package]
+authors = ["Curtis McEnroe <programble@gmail.com>"]
+name = "fix"
+version = "0.0.0"
+
+[dependencies]
+typenum = "1.8.0"
