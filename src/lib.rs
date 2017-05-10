@@ -12,7 +12,7 @@ use core::marker::PhantomData;
 use core::ops::{Neg, Add, Sub, Mul, Div, Rem};
 use core::ops::{AddAssign, SubAssign, MulAssign, DivAssign, RemAssign};
 
-use typenum::{Unsigned, Integer, Sum, Diff};
+use typenum::{Bit, Unsigned, Integer, Abs, IsLess, Sum, Diff, AbsVal, Z0};
 
 /// Fixed-point number representing _Bits × Base ^Exp_.
 ///
@@ -59,11 +59,20 @@ macro_rules! impl_convert {
 
             /// Converts to another _Exp_.
             pub fn convert<OutExp>(self) -> Fix<$bits, Base, OutExp>
-            where InExp: Sub<OutExp>, Diff<InExp, OutExp>: Integer {
+            where
+                InExp: Sub<OutExp>,
+                Diff<InExp, OutExp>: Abs + IsLess<Z0>,
+                AbsVal<Diff<InExp, OutExp>>: Integer
+            {
                 let base = Base::$to();
-                let diff = Diff::<InExp, OutExp>::$to_i();
-                let ratio = base.pow(diff.abs() as u32);
-                if diff < 0 {
+                let diff = AbsVal::<Diff<InExp, OutExp>>::to_i32();
+                let inverse = <Diff<InExp, OutExp> as IsLess<Z0>>::Output::to_bool();
+
+                // FIXME: Would like to do this with typenum::Pow, but that
+                // seems to result in overflow evaluating requirements.
+                let ratio = base.pow(diff as u32);
+
+                if inverse {
                     Fix::new(self.bits / ratio)
                 } else {
                     Fix::new(self.bits * ratio)
