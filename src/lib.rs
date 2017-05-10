@@ -40,6 +40,39 @@ pub struct Fix<Bits, Base, Exp> {
     marker: PhantomData<(Base, Exp)>,
 }
 
+pub trait FromType {
+    fn from_type<U>() -> Self where U: Unsigned;
+}
+
+impl FromType for u8 { fn from_type<U>() -> Self where U: Unsigned { U::to_u8() } }
+impl FromType for u16 { fn from_type<U>() -> Self where U: Unsigned { U::to_u16() } }
+impl FromType for u32 { fn from_type<U>() -> Self where U: Unsigned { U::to_u32() } }
+impl FromType for u64 { fn from_type<U>() -> Self where U: Unsigned { U::to_u64() } }
+impl FromType for usize { fn from_type<U>() -> Self where U: Unsigned { U::to_usize() } }
+
+impl FromType for i8 { fn from_type<U>() -> Self where U: Unsigned { U::to_i8() } }
+impl FromType for i16 { fn from_type<U>() -> Self where U: Unsigned { U::to_i16() } }
+impl FromType for i32 { fn from_type<U>() -> Self where U: Unsigned { U::to_i32() } }
+impl FromType for i64 { fn from_type<U>() -> Self where U: Unsigned { U::to_i64() } }
+impl FromType for isize { fn from_type<U>() -> Self where U: Unsigned { U::to_isize() } }
+
+// TODO: Use num crate for this?
+pub trait Pow {
+    fn pow(self, exp: u32) -> Self;
+}
+
+impl Pow for u8 { fn pow(self, exp: u32) -> Self { self.pow(exp) } }
+impl Pow for u16 { fn pow(self, exp: u32) -> Self { self.pow(exp) } }
+impl Pow for u32 { fn pow(self, exp: u32) -> Self { self.pow(exp) } }
+impl Pow for u64 { fn pow(self, exp: u32) -> Self { self.pow(exp) } }
+impl Pow for usize { fn pow(self, exp: u32) -> Self { self.pow(exp) } }
+
+impl Pow for i8 { fn pow(self, exp: u32) -> Self { self.pow(exp) } }
+impl Pow for i16 { fn pow(self, exp: u32) -> Self { self.pow(exp) } }
+impl Pow for i32 { fn pow(self, exp: u32) -> Self { self.pow(exp) } }
+impl Pow for i64 { fn pow(self, exp: u32) -> Self { self.pow(exp) } }
+impl Pow for isize { fn pow(self, exp: u32) -> Self { self.pow(exp) } }
+
 impl<Bits, Base, Exp> Fix<Bits, Base, Exp> {
     /// Creates a new number.
     pub fn new(bits: Bits) -> Self {
@@ -50,49 +83,31 @@ impl<Bits, Base, Exp> Fix<Bits, Base, Exp> {
     pub fn into_bits(self) -> Bits {
         self.bits
     }
-}
 
-macro_rules! impl_convert {
-    ($bits:ty, $to:ident, $to_i:ident) => {
-        impl<Base, InExp> Fix<$bits, Base, InExp>
-        where Base: Unsigned {
+    /// Converts to another _Exp_.
+    pub fn convert<OutExp>(self) -> Fix<Bits, Base, OutExp>
+    where
+        Bits: FromType + Pow + Mul<Output = Bits> + Div<Output = Bits>,
+        Base: Unsigned,
+        Exp: Sub<OutExp>,
+        Diff<Exp, OutExp>: Abs + IsLess<Z0>,
+        AbsVal<Diff<Exp, OutExp>>: Integer
+    {
+        let base = Bits::from_type::<Base>();
+        let diff = AbsVal::<Diff<Exp, OutExp>>::to_i32();
+        let inverse = <Diff<Exp, OutExp> as IsLess<Z0>>::Output::to_bool();
 
-            /// Converts to another _Exp_.
-            pub fn convert<OutExp>(self) -> Fix<$bits, Base, OutExp>
-            where
-                InExp: Sub<OutExp>,
-                Diff<InExp, OutExp>: Abs + IsLess<Z0>,
-                AbsVal<Diff<InExp, OutExp>>: Integer
-            {
-                let base = Base::$to();
-                let diff = AbsVal::<Diff<InExp, OutExp>>::to_i32();
-                let inverse = <Diff<InExp, OutExp> as IsLess<Z0>>::Output::to_bool();
+        // FIXME: Would like to do this with typenum::Pow, but that
+        // seems to result in overflow evaluating requirements.
+        let ratio = base.pow(diff as u32);
 
-                // FIXME: Would like to do this with typenum::Pow, but that
-                // seems to result in overflow evaluating requirements.
-                let ratio = base.pow(diff as u32);
-
-                if inverse {
-                    Fix::new(self.bits / ratio)
-                } else {
-                    Fix::new(self.bits * ratio)
-                }
-            }
+        if inverse {
+            Fix::new(self.bits / ratio)
+        } else {
+            Fix::new(self.bits * ratio)
         }
     }
 }
-
-impl_convert!(u8, to_u8, to_i8);
-impl_convert!(u16, to_u16, to_i16);
-impl_convert!(u32, to_u32, to_i32);
-impl_convert!(u64, to_u64, to_i64);
-impl_convert!(usize, to_usize, to_isize);
-
-impl_convert!(i8, to_i8, to_i8);
-impl_convert!(i16, to_i16, to_i16);
-impl_convert!(i32, to_i32, to_i32);
-impl_convert!(i64, to_i64, to_i64);
-impl_convert!(isize, to_isize, to_isize);
 
 // The usual traits.
 
