@@ -8,7 +8,7 @@ dependencies = [
 [[package]]
 name = "typenum"
 version = "1.8.0"
-source = "git+https://github.com/programble/typenum?branch=feature/abs#1011d8b6bc4a7510165cab2b82bf5567531e8461"
+source = "git+https://github.com/programble/typenum?branch=feature/abs#0f2af0224fbeb957abe72c3d9afc796f8764888c"
 
 [metadata]
 "checksum typenum 1.8.0 (git+https://github.com/programble/typenum?branch=feature/abs)" = "<none>"
