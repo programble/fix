@@ -65,17 +65,17 @@ pub trait Pow {
     fn pow(self, exp: u32) -> Self;
 }
 
-impl Pow for u8 { fn pow(self, exp: u32) -> Self { self.pow(exp) } }
-impl Pow for u16 { fn pow(self, exp: u32) -> Self { self.pow(exp) } }
-impl Pow for u32 { fn pow(self, exp: u32) -> Self { self.pow(exp) } }
-impl Pow for u64 { fn pow(self, exp: u32) -> Self { self.pow(exp) } }
-impl Pow for usize { fn pow(self, exp: u32) -> Self { self.pow(exp) } }
+impl Pow for u8 { #[inline] fn pow(self, exp: u32) -> Self { self.pow(exp) } }
+impl Pow for u16 { #[inline] fn pow(self, exp: u32) -> Self { self.pow(exp) } }
+impl Pow for u32 { #[inline] fn pow(self, exp: u32) -> Self { self.pow(exp) } }
+impl Pow for u64 { #[inline] fn pow(self, exp: u32) -> Self { self.pow(exp) } }
+impl Pow for usize { #[inline] fn pow(self, exp: u32) -> Self { self.pow(exp) } }
 
-impl Pow for i8 { fn pow(self, exp: u32) -> Self { self.pow(exp) } }
-impl Pow for i16 { fn pow(self, exp: u32) -> Self { self.pow(exp) } }
-impl Pow for i32 { fn pow(self, exp: u32) -> Self { self.pow(exp) } }
-impl Pow for i64 { fn pow(self, exp: u32) -> Self { self.pow(exp) } }
-impl Pow for isize { fn pow(self, exp: u32) -> Self { self.pow(exp) } }
+impl Pow for i8 { #[inline] fn pow(self, exp: u32) -> Self { self.pow(exp) } }
+impl Pow for i16 { #[inline] fn pow(self, exp: u32) -> Self { self.pow(exp) } }
+impl Pow for i32 { #[inline] fn pow(self, exp: u32) -> Self { self.pow(exp) } }
+impl Pow for i64 { #[inline] fn pow(self, exp: u32) -> Self { self.pow(exp) } }
+impl Pow for isize { #[inline] fn pow(self, exp: u32) -> Self { self.pow(exp) } }
 
 impl<Bits, Base, Exp> Fix<Bits, Base, Exp> {
     /// Creates a new number.
