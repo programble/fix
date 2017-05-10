@@ -85,17 +85,17 @@ impl<Bits, Base, Exp> Fix<Bits, Base, Exp> {
     }
 
     /// Converts to another _Exp_.
-    pub fn convert<OutExp>(self) -> Fix<Bits, Base, OutExp>
+    pub fn convert<ToExp>(self) -> Fix<Bits, Base, ToExp>
     where
         Bits: FromType + Pow + Mul<Output = Bits> + Div<Output = Bits>,
         Base: Unsigned,
-        Exp: Sub<OutExp>,
-        Diff<Exp, OutExp>: Abs + IsLess<Z0>,
-        AbsVal<Diff<Exp, OutExp>>: Integer
+        Exp: Sub<ToExp>,
+        Diff<Exp, ToExp>: Abs + IsLess<Z0>,
+        AbsVal<Diff<Exp, ToExp>>: Integer
     {
         let base = Bits::from_type::<Base>();
-        let diff = AbsVal::<Diff<Exp, OutExp>>::to_i32();
-        let inverse = <Diff<Exp, OutExp> as IsLess<Z0>>::Output::to_bool();
+        let diff = AbsVal::<Diff<Exp, ToExp>>::to_i32();
+        let inverse = <Diff<Exp, ToExp> as IsLess<Z0>>::Output::to_bool();
 
         // FIXME: Would like to do this with typenum::Pow, but that
         // seems to result in overflow evaluating requirements.
