@@ -40,26 +40,65 @@ pub struct Fix<Bits, Base, Exp> {
     marker: PhantomData<(Base, Exp)>,
 }
 
-/// Conversion from type-level integers.
-pub trait FromType {
-    /// Creates a value from a type.
-    fn from_type<U>() -> Self where U: Unsigned;
+impl<Bits, Base, Exp> Fix<Bits, Base, Exp> {
+    /// Creates a new number.
+    pub fn new(bits: Bits) -> Self {
+        Fix { bits, marker: PhantomData }
+    }
+
+    /// Returns the underlying bits.
+    pub fn into_bits(self) -> Bits {
+        self.bits
+    }
+
+    /// Converts to another _Exp_.
+    pub fn convert<ToExp>(self) -> Fix<Bits, Base, ToExp>
+    where
+        Bits: FromUnsigned + Pow + Mul<Output = Bits> + Div<Output = Bits>,
+        Base: Unsigned,
+        Exp: Sub<ToExp>,
+        Diff<Exp, ToExp>: Abs + IsLess<Z0>,
+        AbsVal<Diff<Exp, ToExp>>: Integer
+    {
+        let base = Bits::from_unsigned::<Base>();
+        let diff = AbsVal::<Diff<Exp, ToExp>>::to_i32();
+        let inverse = <Diff<Exp, ToExp> as IsLess<Z0>>::Output::to_bool();
+
+        // FIXME: Would like to do this with typenum::Pow, but that
+        // seems to result in overflow evaluating requirements.
+        let ratio = base.pow(diff as u32);
+
+        if inverse {
+            Fix::new(self.bits / ratio)
+        } else {
+            Fix::new(self.bits * ratio)
+        }
+    }
 }
 
-impl FromType for u8 { fn from_type<U>() -> Self where U: Unsigned { U::to_u8() } }
-impl FromType for u16 { fn from_type<U>() -> Self where U: Unsigned { U::to_u16() } }
-impl FromType for u32 { fn from_type<U>() -> Self where U: Unsigned { U::to_u32() } }
-impl FromType for u64 { fn from_type<U>() -> Self where U: Unsigned { U::to_u64() } }
-impl FromType for usize { fn from_type<U>() -> Self where U: Unsigned { U::to_usize() } }
+/// Conversion from type-level unsigned integers.
+///
+/// It seems like this should be in `typenum` itself...
+pub trait FromUnsigned {
+    /// Creates a value from a type.
+    fn from_unsigned<U>() -> Self where U: Unsigned;
+}
 
-impl FromType for i8 { fn from_type<U>() -> Self where U: Unsigned { U::to_i8() } }
-impl FromType for i16 { fn from_type<U>() -> Self where U: Unsigned { U::to_i16() } }
-impl FromType for i32 { fn from_type<U>() -> Self where U: Unsigned { U::to_i32() } }
-impl FromType for i64 { fn from_type<U>() -> Self where U: Unsigned { U::to_i64() } }
-impl FromType for isize { fn from_type<U>() -> Self where U: Unsigned { U::to_isize() } }
+impl FromUnsigned for u8 { fn from_unsigned<U: Unsigned>() -> Self { U::to_u8() } }
+impl FromUnsigned for u16 { fn from_unsigned<U: Unsigned>() -> Self { U::to_u16() } }
+impl FromUnsigned for u32 { fn from_unsigned<U: Unsigned>() -> Self { U::to_u32() } }
+impl FromUnsigned for u64 { fn from_unsigned<U: Unsigned>() -> Self { U::to_u64() } }
+impl FromUnsigned for usize { fn from_unsigned<U: Unsigned>() -> Self { U::to_usize() } }
+
+impl FromUnsigned for i8 { fn from_unsigned<U: Unsigned>() -> Self { U::to_i8() } }
+impl FromUnsigned for i16 { fn from_unsigned<U: Unsigned>() -> Self { U::to_i16() } }
+impl FromUnsigned for i32 { fn from_unsigned<U: Unsigned>() -> Self { U::to_i32() } }
+impl FromUnsigned for i64 { fn from_unsigned<U: Unsigned>() -> Self { U::to_i64() } }
+impl FromUnsigned for isize { fn from_unsigned<U: Unsigned>() -> Self { U::to_isize() } }
 
 /// Exponentiation.
-// TODO: Use num crate for this?
+///
+/// Why must we do this, standard library?
 pub trait Pow {
     /// Raises `self` to the power of `exp`.
     fn pow(self, exp: u32) -> Self;
@@ -76,42 +115,6 @@ impl Pow for i16 { #[inline] fn pow(self, exp: u32) -> Self { self.pow(exp) } }
 impl Pow for i32 { #[inline] fn pow(self, exp: u32) -> Self { self.pow(exp) } }
 impl Pow for i64 { #[inline] fn pow(self, exp: u32) -> Self { self.pow(exp) } }
 impl Pow for isize { #[inline] fn pow(self, exp: u32) -> Self { self.pow(exp) } }
-
-impl<Bits, Base, Exp> Fix<Bits, Base, Exp> {
-    /// Creates a new number.
-    pub fn new(bits: Bits) -> Self {
-        Fix { bits, marker: PhantomData }
-    }
-
-    /// Returns the underlying bits.
-    pub fn into_bits(self) -> Bits {
-        self.bits
-    }
-
-    /// Converts to another _Exp_.
-    pub fn convert<ToExp>(self) -> Fix<Bits, Base, ToExp>
-    where
-        Bits: FromType + Pow + Mul<Output = Bits> + Div<Output = Bits>,
-        Base: Unsigned,
-        Exp: Sub<ToExp>,
-        Diff<Exp, ToExp>: Abs + IsLess<Z0>,
-        AbsVal<Diff<Exp, ToExp>>: Integer
-    {
-        let base = Bits::from_type::<Base>();
-        let diff = AbsVal::<Diff<Exp, ToExp>>::to_i32();
-        let inverse = <Diff<Exp, ToExp> as IsLess<Z0>>::Output::to_bool();
-
-        // FIXME: Would like to do this with typenum::Pow, but that
-        // seems to result in overflow evaluating requirements.
-        let ratio = base.pow(diff as u32);
-
-        if inverse {
-            Fix::new(self.bits / ratio)
-        } else {
-            Fix::new(self.bits * ratio)
-        }
-    }
-}
 
 // The usual traits.
 
