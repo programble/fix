@@ -40,7 +40,9 @@ pub struct Fix<Bits, Base, Exp> {
     marker: PhantomData<(Base, Exp)>,
 }
 
+/// Conversion from type-level integers.
 pub trait FromType {
+    /// Creates a value from a type.
     fn from_type<U>() -> Self where U: Unsigned;
 }
 
@@ -56,8 +58,10 @@ impl FromType for i32 { fn from_type<U>() -> Self where U: Unsigned { U::to_i32(
 impl FromType for i64 { fn from_type<U>() -> Self where U: Unsigned { U::to_i64() } }
 impl FromType for isize { fn from_type<U>() -> Self where U: Unsigned { U::to_isize() } }
 
+/// Exponentiation.
 // TODO: Use num crate for this?
 pub trait Pow {
+    /// Raises `self` to the power of `exp`.
     fn pow(self, exp: u32) -> Self;
 }
 
