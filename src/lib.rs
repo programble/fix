@@ -18,13 +18,11 @@ pub struct Fix<Bits, Base, Exp> {
     marker: PhantomData<(Base, Exp)>,
 }
 
-impl<Bits, Base, Exp> From<Bits> for Fix<Bits, Base, Exp> {
-    fn from(bits: Bits) -> Self {
+impl<Bits, Base, Exp> Fix<Bits, Base, Exp> {
+    pub fn new(bits: Bits) -> Self {
         Fix { bits, marker: PhantomData }
     }
-}
 
-impl<Bits, Base, Exp> Fix<Bits, Base, Exp> {
     pub fn into_bits(self) -> Bits {
         self.bits
     }
@@ -40,9 +38,9 @@ macro_rules! impl_convert {
                 let diff = Diff::<InExp, OutExp>::$to_i();
                 let ratio = base.pow(diff.abs() as u32);
                 if diff < 0 {
-                    Fix::from(self.bits / ratio)
+                    Fix::new(self.bits / ratio)
                 } else {
-                    Fix::from(self.bits * ratio)
+                    Fix::new(self.bits * ratio)
                 }
             }
         }
@@ -67,14 +65,14 @@ impl<Bits, Base, Exp> Copy for Fix<Bits, Base, Exp> where Bits: Copy { }
 impl<Bits, Base, Exp> Clone for Fix<Bits, Base, Exp>
 where Bits: Clone {
     fn clone(&self) -> Self {
-        Self::from(self.bits.clone())
+        Self::new(self.bits.clone())
     }
 }
 
 impl<Bits, Base, Exp> Default for Fix<Bits, Base, Exp>
 where Bits: Default {
     fn default() -> Self {
-        Self::from(Bits::default())
+        Self::new(Bits::default())
     }
 }
 
@@ -119,10 +117,10 @@ where Bits: Ord {
 // Arithmetic.
 
 impl<Bits, Base, Exp> Neg for Fix<Bits, Base, Exp>
-where Bits: Neg<Output = Self> {
+where Bits: Neg<Output = Bits> {
     type Output = Self;
     fn neg(self) -> Self {
-        Self::from(-self.bits)
+        Self::new(-self.bits)
     }
 }
 
@@ -130,7 +128,7 @@ impl<Bits, Base, Exp> Add for Fix<Bits, Base, Exp>
 where Bits: Add<Output = Bits> {
     type Output = Self;
     fn add(self, rhs: Self) -> Self {
-        Self::from(self.bits + rhs.bits)
+        Self::new(self.bits + rhs.bits)
     }
 }
 
@@ -138,7 +136,7 @@ impl<Bits, Base, Exp> Sub for Fix<Bits, Base, Exp>
 where Bits: Sub<Output = Bits> {
     type Output = Self;
     fn sub(self, rhs: Self) -> Self {
-        Self::from(self.bits - rhs.bits)
+        Self::new(self.bits - rhs.bits)
     }
 }
 
@@ -146,7 +144,7 @@ impl<Bits, Base, LExp, RExp> Mul<Fix<Bits, Base, RExp>> for Fix<Bits, Base, LExp
 where Bits: Mul<Output = Bits>, LExp: Add<RExp> {
     type Output = Fix<Bits, Base, Sum<LExp, RExp>>;
     fn mul(self, rhs: Fix<Bits, Base, RExp>) -> Self::Output {
-        Self::Output::from(self.bits * rhs.bits)
+        Self::Output::new(self.bits * rhs.bits)
     }
 }
 
@@ -154,7 +152,7 @@ impl<Bits, Base, LExp, RExp> Div<Fix<Bits, Base, RExp>> for Fix<Bits, Base, LExp
 where Bits: Div<Output = Bits>, LExp: Sub<RExp> {
     type Output = Fix<Bits, Base, Diff<LExp, RExp>>;
     fn div(self, rhs: Fix<Bits, Base, RExp>) -> Self::Output {
-        Self::Output::from(self.bits / rhs.bits)
+        Self::Output::new(self.bits / rhs.bits)
     }
 }
 
@@ -162,7 +160,7 @@ impl<Bits, Base, LExp, RExp> Rem<Fix<Bits, Base, RExp>> for Fix<Bits, Base, LExp
 where Bits: Rem<Output = Bits> {
     type Output = Self;
     fn rem(self, rhs: Fix<Bits, Base, RExp>) -> Self {
-        Self::from(self.bits % rhs.bits)
+        Self::new(self.bits % rhs.bits)
     }
 }
 
@@ -170,7 +168,7 @@ impl<Bits, Base, Exp> Mul<Bits> for Fix<Bits, Base, Exp>
 where Bits: Mul<Output = Bits> {
     type Output = Self;
     fn mul(self, rhs: Bits) -> Self {
-        Self::from(self.bits * rhs)
+        Self::new(self.bits * rhs)
     }
 }
 
@@ -178,7 +176,7 @@ impl<Bits, Base, Exp> Div<Bits> for Fix<Bits, Base, Exp>
 where Bits: Div<Output = Bits> {
     type Output = Self;
     fn div(self, rhs: Bits) -> Self {
-        Self::from(self.bits / rhs)
+        Self::new(self.bits / rhs)
     }
 }
 
@@ -186,7 +184,7 @@ impl<Bits, Base, Exp> Rem<Bits> for Fix<Bits, Base, Exp>
 where Bits: Rem<Output = Bits> {
     type Output = Self;
     fn rem(self, rhs: Bits) -> Self {
-        Self::from(self.bits % rhs)
+        Self::new(self.bits % rhs)
     }
 }
 
