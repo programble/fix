@@ -2,6 +2,7 @@
 
 pub extern crate typenum;
 
+/// Type aliases.
 pub mod aliases;
 
 use core::cmp::{PartialEq, Eq, PartialOrd, Ord, Ordering};
@@ -13,16 +14,39 @@ use core::ops::{AddAssign, SubAssign, MulAssign, DivAssign, RemAssign};
 
 use typenum::{Unsigned, Integer, Sum, Diff};
 
+/// Fixed-point number representing _Bits × Base ^Exp_.
+///
+/// - `Bits` is an integer primitive type.
+/// - `Base` is an [`Unsigned`] type-level integer.
+/// - `Exp` is a signed type-level [`Integer`].
+///
+/// [`Unsigned`]: ../typenum/marker_traits/trait.Unsigned.html
+/// [`Integer`]: ../typenum/marker_traits/trait.Integer.html
+///
+/// # Summary of implemented traits
+///
+/// - `Clone`, `Copy`, `Default`, `Hash`, `Debug`.
+/// - `PartialEq`, `Eq` between the same *Bits*, *Base* and *Exp*.
+/// - `PartialOrd`, `Ord` between the same *Bits*, *Base* and *Exp*.
+/// - `Neg` where *Bits* does.
+/// - `Add`, `Sub` between the same *Bits*, *Base* and *Exp*.
+/// - `Mul`, `Div`, `Rem` between the same *Bits* and *Base*.
+/// - `Mul`, `Div`, `Rem` between `Fix` and `Bits`.
+/// - `AddAssign`, `SubAssign` between the same *Bits*, *Base* and *Exp*.
+/// - `MulAssign`, `DivAssign`, `RemAssign` between `Fix` and `Bits`.
+/// - `RemAssign` between the same *Bits* and *Base*.
 pub struct Fix<Bits, Base, Exp> {
     bits: Bits,
     marker: PhantomData<(Base, Exp)>,
 }
 
 impl<Bits, Base, Exp> Fix<Bits, Base, Exp> {
+    /// Creates a new number.
     pub fn new(bits: Bits) -> Self {
         Fix { bits, marker: PhantomData }
     }
 
+    /// Returns the underlying bits.
     pub fn into_bits(self) -> Bits {
         self.bits
     }
@@ -32,6 +56,8 @@ macro_rules! impl_convert {
     ($bits:ty, $to:ident, $to_i:ident) => {
         impl<Base, InExp> Fix<$bits, Base, InExp>
         where Base: Unsigned {
+
+            /// Converts to another _Exp_.
             pub fn convert<OutExp>(self) -> Fix<$bits, Base, OutExp>
             where InExp: Sub<OutExp>, Diff<InExp, OutExp>: Integer {
                 let base = Base::$to();

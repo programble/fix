@@ -1,3 +1,4 @@
+/// Base-2 types.
 pub mod binary {
     use typenum::U2;
 
@@ -16,6 +17,7 @@ pub mod binary {
     pub type FixIsize<Exp> = Fix<isize, U2, Exp>;
 }
 
+/// Base-10 types.
 pub mod decimal {
     use typenum::U10;
 
@@ -34,6 +36,7 @@ pub mod decimal {
     pub type FixIsize<Exp> = Fix<isize, U10, Exp>;
 }
 
+/// SI prefixes.
 pub mod si {
     use typenum::{N1, N2, N3, N6, N9, N12, N15, N18, N21, N24};
     use typenum::{P1, P2, P3, P6, P9, P12, P15, P18, P21, P24};
@@ -66,6 +69,7 @@ pub mod si {
     pub type Yotta<Bits> = Fix<Bits, U10, P24>;
 }
 
+/// IEC prefixes.
 pub mod iec {
     use typenum::{P10, P20, P30, P40, P50, P60, P70, P80};
     use typenum::{Z0, U2};
