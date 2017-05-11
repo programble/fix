@@ -1,5 +1,7 @@
 #![no_std]
 
+#![cfg_attr(feature = "i128", feature(i128_type))]
+
 pub extern crate typenum;
 
 /// Type aliases.
@@ -115,6 +117,15 @@ impl Pow for i16 { #[inline] fn pow(self, exp: u32) -> Self { self.pow(exp) } }
 impl Pow for i32 { #[inline] fn pow(self, exp: u32) -> Self { self.pow(exp) } }
 impl Pow for i64 { #[inline] fn pow(self, exp: u32) -> Self { self.pow(exp) } }
 impl Pow for isize { #[inline] fn pow(self, exp: u32) -> Self { self.pow(exp) } }
+
+#[cfg(feature = "i128")]
+mod __i128 {
+    use super::*;
+    impl FromUnsigned for u128 { fn from_unsigned<U: Unsigned>() -> Self { U::to_u128() } }
+    impl FromUnsigned for i128 { fn from_unsigned<U: Unsigned>() -> Self { U::to_i128() } }
+    impl Pow for u128 { #[inline] fn pow(self, exp: u32) -> Self { self.pow(exp) } }
+    impl Pow for i128 { #[inline] fn pow(self, exp: u32) -> Self { self.pow(exp) } }
+}
 
 // The usual traits.
 

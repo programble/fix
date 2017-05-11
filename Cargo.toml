@@ -1,7 +1,10 @@
 [package]
-authors = ["Curtis McEnroe <programble@gmail.com>"]
 name = "fix"
 version = "0.0.0"
+authors = ["Curtis McEnroe <programble@gmail.com>"]
+
+[features]
+i128 = ["typenum/i128"]
 
 [dependencies.typenum]
 version = "1.8.0"
