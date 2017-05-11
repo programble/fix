@@ -4,23 +4,23 @@ pub mod binary {
 
     use Fix;
 
-    pub type FixU8<Exp> = Fix<u8, U2, Exp>;
-    pub type FixU16<Exp> = Fix<u16, U2, Exp>;
-    pub type FixU32<Exp> = Fix<u32, U2, Exp>;
-    pub type FixU64<Exp> = Fix<u64, U2, Exp>;
-    pub type FixUsize<Exp> = Fix<usize, U2, Exp>;
+    pub type UFix8<Exp> = Fix<u8, U2, Exp>;
+    pub type UFix16<Exp> = Fix<u16, U2, Exp>;
+    pub type UFix32<Exp> = Fix<u32, U2, Exp>;
+    pub type UFix64<Exp> = Fix<u64, U2, Exp>;
+    pub type UFixSize<Exp> = Fix<usize, U2, Exp>;
 
     #[cfg(feature = "i128")]
-    pub type FixU128<Exp> = Fix<u128, U2, Exp>;
+    pub type UFix128<Exp> = Fix<u128, U2, Exp>;
 
-    pub type FixI8<Exp> = Fix<i8, U2, Exp>;
-    pub type FixI16<Exp> = Fix<i16, U2, Exp>;
-    pub type FixI32<Exp> = Fix<i32, U2, Exp>;
-    pub type FixI64<Exp> = Fix<i64, U2, Exp>;
-    pub type FixIsize<Exp> = Fix<isize, U2, Exp>;
+    pub type IFix8<Exp> = Fix<i8, U2, Exp>;
+    pub type IFix16<Exp> = Fix<i16, U2, Exp>;
+    pub type IFix32<Exp> = Fix<i32, U2, Exp>;
+    pub type IFix64<Exp> = Fix<i64, U2, Exp>;
+    pub type IFixSize<Exp> = Fix<isize, U2, Exp>;
 
     #[cfg(feature = "i128")]
-    pub type FixI128<Exp> = Fix<i128, U2, Exp>;
+    pub type IFix128<Exp> = Fix<i128, U2, Exp>;
 }
 
 /// Base-10 types.
@@ -29,23 +29,23 @@ pub mod decimal {
 
     use Fix;
 
-    pub type FixU8<Exp> = Fix<u8, U10, Exp>;
-    pub type FixU16<Exp> = Fix<u16, U10, Exp>;
-    pub type FixU32<Exp> = Fix<u32, U10, Exp>;
-    pub type FixU64<Exp> = Fix<u64, U10, Exp>;
-    pub type FixUsize<Exp> = Fix<usize, U10, Exp>;
+    pub type UFix8<Exp> = Fix<u8, U10, Exp>;
+    pub type UFix16<Exp> = Fix<u16, U10, Exp>;
+    pub type UFix32<Exp> = Fix<u32, U10, Exp>;
+    pub type UFix64<Exp> = Fix<u64, U10, Exp>;
+    pub type UFixSize<Exp> = Fix<usize, U10, Exp>;
 
     #[cfg(feature = "i128")]
-    pub type FixU128<Exp> = Fix<u128, U10, Exp>;
+    pub type UFix128<Exp> = Fix<u128, U10, Exp>;
 
-    pub type FixI8<Exp> = Fix<i8, U10, Exp>;
-    pub type FixI16<Exp> = Fix<i16, U10, Exp>;
-    pub type FixI32<Exp> = Fix<i32, U10, Exp>;
-    pub type FixI64<Exp> = Fix<i64, U10, Exp>;
-    pub type FixIsize<Exp> = Fix<isize, U10, Exp>;
+    pub type IFix8<Exp> = Fix<i8, U10, Exp>;
+    pub type IFix16<Exp> = Fix<i16, U10, Exp>;
+    pub type IFix32<Exp> = Fix<i32, U10, Exp>;
+    pub type IFix64<Exp> = Fix<i64, U10, Exp>;
+    pub type IFixSize<Exp> = Fix<isize, U10, Exp>;
 
     #[cfg(feature = "i128")]
-    pub type FixI128<Exp> = Fix<i128, U10, Exp>;
+    pub type IFix128<Exp> = Fix<i128, U10, Exp>;
 }
 
 /// SI prefixes.
