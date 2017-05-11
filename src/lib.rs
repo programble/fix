@@ -12,7 +12,7 @@ use core::marker::PhantomData;
 use core::ops::{Neg, Add, Sub, Mul, Div, Rem};
 use core::ops::{AddAssign, SubAssign, MulAssign, DivAssign, RemAssign};
 
-use typenum::{Bit, Unsigned, Integer, Abs, IsLess, Sum, Diff, AbsVal, Z0};
+use typenum::{Bit, Unsigned, Integer, Abs, IsLess, Sum, Diff, AbsVal, Le, Z0};
 
 /// Fixed-point number representing _Bits × Base ^Exp_.
 ///
@@ -62,7 +62,7 @@ impl<Bits, Base, Exp> Fix<Bits, Base, Exp> {
     {
         let base = Bits::from_unsigned::<Base>();
         let diff = AbsVal::<Diff<Exp, ToExp>>::to_i32();
-        let inverse = <Diff<Exp, ToExp> as IsLess<Z0>>::Output::to_bool();
+        let inverse = Le::<Diff<Exp, ToExp>, Z0>::to_bool();
 
         // FIXME: Would like to do this with typenum::Pow, but that
         // seems to result in overflow evaluating requirements.
