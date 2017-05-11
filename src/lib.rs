@@ -7,14 +7,17 @@ pub extern crate typenum;
 /// Type aliases.
 pub mod aliases;
 
-use core::cmp::{PartialEq, Eq, PartialOrd, Ord, Ordering};
-use core::fmt::{Debug, Formatter, Error};
+use core::cmp::{Eq, Ord, Ordering, PartialEq, PartialOrd};
+use core::fmt::{Debug, Error, Formatter};
 use core::hash::{Hash, Hasher};
 use core::marker::PhantomData;
-use core::ops::{Neg, Add, Sub, Mul, Div, Rem};
-use core::ops::{AddAssign, SubAssign, MulAssign, DivAssign, RemAssign};
+use core::ops::{AddAssign, DivAssign, MulAssign, RemAssign, SubAssign};
+use core::ops::{Add, Div, Mul, Neg, Rem, Sub};
 
-use typenum::{Bit, Unsigned, Integer, Abs, IsLess, Sum, Diff, AbsVal, Le, Z0};
+use typenum::consts::Z0;
+use typenum::marker_traits::{Bit, Integer, Unsigned};
+use typenum::operator_aliases::{AbsVal, Diff, Le, Sum};
+use typenum::type_operators::{Abs, IsLess};
 
 /// Fixed-point number representing _Bits × Base ^Exp_.
 ///
