@@ -10,11 +10,17 @@ pub mod binary {
     pub type FixU64<Exp> = Fix<u64, U2, Exp>;
     pub type FixUsize<Exp> = Fix<usize, U2, Exp>;
 
+    #[cfg(feature = "i128")]
+    pub type FixU128<Exp> = Fix<u128, U2, Exp>;
+
     pub type FixI8<Exp> = Fix<i8, U2, Exp>;
     pub type FixI16<Exp> = Fix<i16, U2, Exp>;
     pub type FixI32<Exp> = Fix<i32, U2, Exp>;
     pub type FixI64<Exp> = Fix<i64, U2, Exp>;
     pub type FixIsize<Exp> = Fix<isize, U2, Exp>;
+
+    #[cfg(feature = "i128")]
+    pub type FixI128<Exp> = Fix<i128, U2, Exp>;
 }
 
 /// Base-10 types.
@@ -29,11 +35,17 @@ pub mod decimal {
     pub type FixU64<Exp> = Fix<u64, U10, Exp>;
     pub type FixUsize<Exp> = Fix<usize, U10, Exp>;
 
+    #[cfg(feature = "i128")]
+    pub type FixU128<Exp> = Fix<u128, U10, Exp>;
+
     pub type FixI8<Exp> = Fix<i8, U10, Exp>;
     pub type FixI16<Exp> = Fix<i16, U10, Exp>;
     pub type FixI32<Exp> = Fix<i32, U10, Exp>;
     pub type FixI64<Exp> = Fix<i64, U10, Exp>;
     pub type FixIsize<Exp> = Fix<isize, U10, Exp>;
+
+    #[cfg(feature = "i128")]
+    pub type FixI128<Exp> = Fix<i128, U10, Exp>;
 }
 
 /// SI prefixes.
