@@ -5,5 +5,5 @@ version = "0.0.0"
 
 [dependencies.typenum]
 version = "1.8.0"
-git = "https://github.com/programble/typenum"
-branch = "feature/abs"
+git = "https://github.com/paholg/typenum"
+branch = "master"

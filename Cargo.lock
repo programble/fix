@@ -2,13 +2,13 @@
 name = "fix"
 version = "0.0.0"
 dependencies = [
- "typenum 1.8.0 (git+https://github.com/programble/typenum?branch=feature/abs)",
+ "typenum 1.8.0 (git+https://github.com/paholg/typenum)",
 ]
 
 [[package]]
 name = "typenum"
 version = "1.8.0"
-source = "git+https://github.com/programble/typenum?branch=feature/abs#0f2af0224fbeb957abe72c3d9afc796f8764888c"
+source = "git+https://github.com/paholg/typenum#8ff62fafe1a8127638a307d5ead80ec1bf9794c0"
 
 [metadata]
-"checksum typenum 1.8.0 (git+https://github.com/programble/typenum?branch=feature/abs)" = "<none>"
+"checksum typenum 1.8.0 (git+https://github.com/paholg/typenum)" = "<none>"
