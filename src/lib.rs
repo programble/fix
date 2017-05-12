@@ -19,44 +19,65 @@ use typenum::marker_traits::{Bit, Integer, Unsigned};
 use typenum::operator_aliases::{AbsVal, Diff, Le, Sum};
 use typenum::type_operators::{Abs, IsLess};
 
-/// Fixed-point number representing _Bits × Base ^Exp_.
+/// Fixed-point number representing _Bits × Base <sup>Exp</sup>_.
 ///
-/// - `Bits` is an integer primitive type.
+/// - `Bits` is an integer primitive type, or any type which can be created from a type-level
+///   integer and exponentiated.
 /// - `Base` is an [`Unsigned`] type-level integer.
 /// - `Exp` is a signed type-level [`Integer`].
 ///
 /// [`Unsigned`]: ../typenum/marker_traits/trait.Unsigned.html
 /// [`Integer`]: ../typenum/marker_traits/trait.Integer.html
 ///
-/// # Summary of implemented traits
+/// # Summary of operations
 ///
-/// - `Clone`, `Copy`, `Default`, `Hash`, `Debug`.
-/// - `PartialEq`, `Eq` between the same *Bits*, *Base* and *Exp*.
-/// - `PartialOrd`, `Ord` between the same *Bits*, *Base* and *Exp*.
-/// - `Neg` where *Bits* does.
-/// - `Add`, `Sub` between the same *Bits*, *Base* and *Exp*.
-/// - `Mul`, `Div`, `Rem` between the same *Bits* and *Base*.
-/// - `Mul`, `Div`, `Rem` between `Fix` and `Bits`.
-/// - `AddAssign`, `SubAssign` between the same *Bits*, *Base* and *Exp*.
-/// - `MulAssign`, `DivAssign`, `RemAssign` between `Fix` and `Bits`.
-/// - `RemAssign` between the same *Bits* and *Base*.
+/// Lower case variables represent values of _Bits_. Upper case _B_ and _E_ represent type-level
+/// integers _Base_ and _Exp_, respectively.
+///
+/// - _−(x B <sup>E</sup>) = (−x) B <sup>E</sup>_
+/// - _(x B <sup>E</sup>) + (y B <sup>E</sup>) = (x + y) B <sup>E</sup>_
+/// - _(x B <sup>E</sup>) − (y B <sup>E</sup>) = (x − y) B <sup>E</sup>_
+/// - _(x B <sup>E<sub>x</sub></sup>) × (y B <sup>E<sub>y</sub></sup>) =
+///   (x × y) B <sup>E<sub>x</sub> + E<sub>y</sub></sup>_
+/// - _(x B <sup>E<sub>x</sub></sup>) ÷ (y B <sup>E<sub>y</sub></sup>) =
+///   (x ÷ y) B <sup>E<sub>x</sub> − E<sub>y</sub></sup>_
+/// - _(x B <sup>E<sub>x</sub></sup>) % (y B <sup>E<sub>y</sub></sup>) =
+///   (x % y) B <sup>E<sub>x</sub></sup>_
+/// - _(x B <sup>E</sup>) × y = (x × y) B <sup>E</sup>_
+/// - _(x B <sup>E</sup>) ÷ y = (x ÷ y) B <sup>E</sup>_
+/// - _(x B <sup>E</sup>) % y = (x % y) B <sup>E</sup>_
 pub struct Fix<Bits, Base, Exp> {
-    bits: Bits,
+    /// The underlying integer.
+    pub bits: Bits,
+
     marker: PhantomData<(Base, Exp)>,
 }
 
 impl<Bits, Base, Exp> Fix<Bits, Base, Exp> {
-    /// Creates a new number.
+    /// Creates a number.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use fix::aliases::si::{Kilo, Milli};
+    /// Milli::new(25); // 0.025
+    /// Kilo::new(25); // 25 000
+    /// ```
     pub fn new(bits: Bits) -> Self {
         Fix { bits, marker: PhantomData }
     }
 
-    /// Returns the underlying bits.
-    pub fn into_bits(self) -> Bits {
-        self.bits
-    }
-
     /// Converts to another _Exp_.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use fix::aliases::si::{Kilo, Milli};
+    /// let kilo = Kilo::new(5);
+    /// let milli = Milli::new(5_000_000);
+    /// assert_eq!(kilo, milli.convert());
+    /// assert_eq!(milli, kilo.convert());
+    /// ```
     pub fn convert<ToExp>(self) -> Fix<Bits, Base, ToExp>
     where
         Bits: FromUnsigned + Pow + Mul<Output = Bits> + Div<Output = Bits>,
@@ -81,9 +102,12 @@ impl<Bits, Base, Exp> Fix<Bits, Base, Exp> {
     }
 }
 
-/// Conversion from type-level unsigned integers.
+/// Conversion from type-level [`Unsigned`] integers.
 ///
-/// It seems like this should be in `typenum` itself...
+/// Enables being generic over types which can be created from type-level integers. It should
+/// probably be in `typenum` itself...
+///
+/// [`Unsigned`]: ../typenum/marker_traits/trait.Unsigned.html
 pub trait FromUnsigned {
     /// Creates a value from a type.
     fn from_unsigned<U>() -> Self where U: Unsigned;
@@ -103,7 +127,8 @@ impl FromUnsigned for isize { fn from_unsigned<U: Unsigned>() -> Self { U::to_is
 
 /// Exponentiation.
 ///
-/// Why must we do this, standard library?
+/// Enables being generic over integers which can be exponentiated. Why must we do this, standard
+/// library?
 pub trait Pow {
     /// Raises `self` to the power of `exp`.
     fn pow(self, exp: u32) -> Self;
