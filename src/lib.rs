@@ -34,18 +34,18 @@ use typenum::type_operators::{Abs, IsLess};
 /// Lower case variables represent values of _Bits_. Upper case _B_ and _E_ represent type-level
 /// integers _Base_ and _Exp_, respectively.
 ///
-/// - _−(x B <sup>E</sup>) = (−x) B <sup>E</sup>_
-/// - _(x B <sup>E</sup>) + (y B <sup>E</sup>) = (x + y) B <sup>E</sup>_
-/// - _(x B <sup>E</sup>) − (y B <sup>E</sup>) = (x − y) B <sup>E</sup>_
-/// - _(x B <sup>E<sub>x</sub></sup>) × (y B <sup>E<sub>y</sub></sup>) =
-///   (x × y) B <sup>E<sub>x</sub> + E<sub>y</sub></sup>_
-/// - _(x B <sup>E<sub>x</sub></sup>) ÷ (y B <sup>E<sub>y</sub></sup>) =
-///   (x ÷ y) B <sup>E<sub>x</sub> − E<sub>y</sub></sup>_
-/// - _(x B <sup>E<sub>x</sub></sup>) % (y B <sup>E<sub>y</sub></sup>) =
-///   (x % y) B <sup>E<sub>x</sub></sup>_
-/// - _(x B <sup>E</sup>) × y = (x × y) B <sup>E</sup>_
-/// - _(x B <sup>E</sup>) ÷ y = (x ÷ y) B <sup>E</sup>_
-/// - _(x B <sup>E</sup>) % y = (x % y) B <sup>E</sup>_
+/// - _−(x B<sup>E</sup>) = (−x) B<sup>E</sup>_
+/// - _(x B<sup>E</sup>) + (y B<sup>E</sup>) = (x + y) B<sup>E</sup>_
+/// - _(x B<sup>E</sup>) − (y B<sup>E</sup>) = (x − y) B<sup>E</sup>_
+/// - _(x B<sup>E<sub>x</sub></sup>) × (y B<sup>E<sub>y</sub></sup>) =
+///   (x × y) B<sup>E<sub>x</sub> + E<sub>y</sub></sup>_
+/// - _(x B<sup>E<sub>x</sub></sup>) ÷ (y B<sup>E<sub>y</sub></sup>) =
+///   (x ÷ y) B<sup>E<sub>x</sub> − E<sub>y</sub></sup>_
+/// - _(x B<sup>E<sub>x</sub></sup>) % (y B<sup>E<sub>y</sub></sup>) =
+///   (x % y) B<sup>E<sub>x</sub></sup>_
+/// - _(x B<sup>E</sup>) × y = (x × y) B<sup>E</sup>_
+/// - _(x B<sup>E</sup>) ÷ y = (x ÷ y) B<sup>E</sup>_
+/// - _(x B<sup>E</sup>) % y = (x % y) B<sup>E</sup>_
 pub struct Fix<Bits, Base, Exp> {
     /// The underlying integer.
     pub bits: Bits,
