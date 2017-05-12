@@ -52,7 +52,7 @@ pub mod decimal {
 pub mod si {
     use typenum::{N1, N2, N3, N6, N9, N12, N15, N18, N21, N24};
     use typenum::{P1, P2, P3, P6, P9, P12, P15, P18, P21, P24};
-    use typenum::{Z0, U10};
+    use typenum::{U10, Z0};
 
     use Fix;
 
@@ -84,7 +84,7 @@ pub mod si {
 /// IEC prefixes.
 pub mod iec {
     use typenum::{P10, P20, P30, P40, P50, P60, P70, P80};
-    use typenum::{Z0, U2};
+    use typenum::{U2, Z0};
 
     use Fix;
 
