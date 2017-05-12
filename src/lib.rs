@@ -302,3 +302,110 @@ where Bits: RemAssign {
         self.bits %= rhs;
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use aliases::si::{Kilo, Milli, Unit};
+
+    #[test]
+    fn convert_milli_to_kilo() {
+        assert_eq!(Kilo::new(15), Milli::new(15_000_000).convert());
+    }
+
+    #[test]
+    fn convert_kilo_to_milli() {
+        assert_eq!(Milli::new(15_000_000), Kilo::new(15).convert());
+    }
+
+    #[test]
+    fn cmp() {
+        assert!(Kilo::new(1) < Kilo::new(2));
+    }
+
+    #[test]
+    fn neg() {
+        assert_eq!(Kilo::new(-1), -Kilo::new(1i32));
+    }
+
+    #[test]
+    fn add() {
+        assert_eq!(Kilo::new(3), Kilo::new(1) + Kilo::new(2));
+    }
+
+    #[test]
+    fn sub() {
+        assert_eq!(Kilo::new(1), Kilo::new(3) - Kilo::new(2));
+    }
+
+    #[test]
+    fn mul() {
+        assert_eq!(Unit::new(6), Kilo::new(2) * Milli::new(3));
+    }
+
+    #[test]
+    fn div() {
+        assert_eq!(Unit::new(3), Kilo::new(6) / Kilo::new(2));
+    }
+
+    #[test]
+    fn rem() {
+        assert_eq!(Kilo::new(1), Kilo::new(6) % Milli::new(5));
+    }
+
+    #[test]
+    fn mul_bits() {
+        assert_eq!(Kilo::new(6), Kilo::new(2) * 3);
+    }
+
+    #[test]
+    fn div_bits() {
+        assert_eq!(Kilo::new(3), Kilo::new(6) / 2);
+    }
+
+    #[test]
+    fn rem_bits() {
+        assert_eq!(Kilo::new(1), Kilo::new(6) % 5);
+    }
+
+    #[test]
+    fn add_assign() {
+        let mut a = Kilo::new(1);
+        a += Kilo::new(2);
+        assert_eq!(Kilo::new(3), a);
+    }
+
+    #[test]
+    fn sub_assign() {
+        let mut a = Kilo::new(3);
+        a -= Kilo::new(2);
+        assert_eq!(Kilo::new(1), a);
+    }
+
+    #[test]
+    fn mul_assign_bits() {
+        let mut a = Kilo::new(2);
+        a *= 3;
+        assert_eq!(Kilo::new(6), a);
+    }
+
+    #[test]
+    fn div_assign_bits() {
+        let mut a = Kilo::new(6);
+        a /= 2;
+        assert_eq!(Kilo::new(3), a);
+    }
+
+    #[test]
+    fn rem_assign() {
+        let mut a = Kilo::new(6);
+        a %= Milli::new(5);
+        assert_eq!(Kilo::new(1), a);
+    }
+
+    #[test]
+    fn rem_assign_bits() {
+        let mut a = Kilo::new(6);
+        a %= 5;
+        assert_eq!(Kilo::new(1), a);
+    }
+}
