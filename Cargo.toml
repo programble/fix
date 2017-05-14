@@ -7,7 +7,5 @@ license = "ISC"
 [features]
 i128 = ["typenum/i128"]
 
-[dependencies.typenum]
-version = "1.8.0"
-git = "https://github.com/paholg/typenum"
-branch = "master"
+[dependencies]
+typenum = "1.9.0"

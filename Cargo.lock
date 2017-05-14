@@ -2,13 +2,13 @@
 name = "fix"
 version = "0.0.0"
 dependencies = [
- "typenum 1.8.0 (git+https://github.com/paholg/typenum)",
+ "typenum 1.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "typenum"
-version = "1.8.0"
-source = "git+https://github.com/paholg/typenum#8ff62fafe1a8127638a307d5ead80ec1bf9794c0"
+version = "1.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [metadata]
-"checksum typenum 1.8.0 (git+https://github.com/paholg/typenum)" = "<none>"
+"checksum typenum 1.9.0 (registry+https://github.com/rust-lang/crates.io-index)" = "13a99dc6780ef33c78780b826cf9d2a78840b72cae9474de4bcaf9051e60ebbd"
