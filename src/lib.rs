@@ -1,3 +1,47 @@
+//! Fixed-point number types.
+//!
+//! # What?
+//!
+//! Fixed-point is a number representation with a fixed number of digits before and after the radix
+//! point. This means that range is static rather than dynamic, as with floating-point. It also
+//! means that they can be represented as integers, with their scale tracked by the type system.
+//!
+//! In this library, the scale of a `Fix` is represented as two type-level integers: the base and
+//! the exponent. Any underlying integer primitive can be used to store the number. Arithmetic can
+//! be performed on these numbers, and they can be converted to different scale exponents.
+//!
+//! # Why?
+//!
+//! A classic example: let's try adding 10 cents to 20 cents using floating-point. The result
+//! should be 30 cents, right?
+//!
+//! ```should_panic
+//! assert_eq!(0.30, 0.10 + 0.20);
+//! ```
+//!
+//! Nope. We get an extra forty quintillionths!
+//!
+//! ```text
+//! assertion failed: `(left == right)` (left: `0.3`, right: `0.30000000000000004`)'
+//! ```
+//!
+//! This is due to the fact that neither 0.1 nor 0.2 can be represented exactly in base-2. With
+//! `Fix`, we can choose the precision we want in base-10 at compile-time. In this case, hundredths
+//! of a dollar.
+//!
+//! ```
+//! use fix::aliases::si::Centi; // Fix<_, U10, N2>
+//! assert_eq!(Centi::new(0_30), Centi::new(0_10) + Centi::new(0_20));
+//! ```
+//!
+//! # `no_std`
+//!
+//! This crate is `no_std`.
+//!
+//! # `i128` support
+//!
+//! Support for `u128` and `i128` can be enabled on nightly Rust through the `i128` Cargo feature.
+
 #![no_std]
 
 #![cfg_attr(feature = "i128", feature(i128_type))]
