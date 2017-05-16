@@ -34,6 +34,30 @@
 //! assert_eq!(Centi::new(0_30), Centi::new(0_10) + Centi::new(0_20));
 //! ```
 //!
+//! But base-10 is so inefficient for base-2 computers! Right? It's true that multiplying and
+//! dividing by 10 is slower than bit-shifting, but that is only done when _moving_ the point. With
+//! `Fix`, this is only happens explicitly, in the `convert` method.
+//!
+//! ```
+//! use fix::aliases::si::{Centi, Milli};
+//! assert_eq!(Milli::new(0_300), Centi::new(0_30).convert());
+//! ```
+//!
+//! And we can, of course, choose a base-2 scale.
+//!
+//! ```
+//! use fix::aliases::iec::{Kibi, Mebi};
+//! assert_eq!(Kibi::new(1024), Mebi::new(1).convert());
+//! ```
+//!
+//! It's also worth nothing that no implicit conversion is done for multiplication and division.
+//! The output type's scale is the result of the same operation on the input scales.
+//!
+//! ```
+//! use fix::aliases::iec::{Gibi, Kibi, Mebi};
+//! assert_eq!(Mebi::new(3), Gibi::new(6) / Kibi::new(2));
+//! ```
+//!
 //! # `no_std`
 //!
 //! This crate is `no_std`.
