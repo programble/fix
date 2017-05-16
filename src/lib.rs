@@ -12,46 +12,46 @@
 //!
 //! # Why?
 //!
-//! A classic example: let's try adding 10 cents to 20 cents using floating-point. The result
-//! should be 30 cents, right?
+//! A classic example: let's sum 10 cents and 20 cents using floating-point. We expect a result of
+//! 30 cents.
 //!
 //! ```should_panic
 //! assert_eq!(0.30, 0.10 + 0.20);
 //! ```
 //!
-//! Nope. We get an extra forty quintillionths!
+//! Wrong! We get an extra forty quintillionths of a dollar.
 //!
 //! ```text
 //! assertion failed: `(left == right)` (left: `0.3`, right: `0.30000000000000004`)'
 //! ```
 //!
-//! This is due to the fact that neither 0.1 nor 0.2 can be represented exactly in base-2. With
-//! `Fix`, we can choose the precision we want in base-10 at compile-time. In this case, hundredths
-//! of a dollar.
+//! This is due to neither 0.1 nor 0.2 being exactly representable in base-2, just as a third can't
+//! be represented exactly in base-10. With `Fix`, we can choose the precision we want in base-10,
+//! at compile-time. In this case, hundredths of a dollar will do.
 //!
 //! ```
 //! use fix::aliases::si::Centi; // Fix<_, U10, N2>
 //! assert_eq!(Centi::new(0_30), Centi::new(0_10) + Centi::new(0_20));
 //! ```
 //!
-//! But base-10 is so inefficient for base-2 computers! Right? It's true that multiplying and
-//! dividing by 10 is slower than bit-shifting, but that is only done when _moving_ the point. With
-//! `Fix`, this is only happens explicitly, in the `convert` method.
+//! But decimal is inefficient for binary computers, right? Multiplying and dividing by 10 is
+//! slower than bit-shifting, but that's only needed when _moving_ the point. With `Fix`, this is
+//! only done explicitly with the `convert` method.
 //!
 //! ```
 //! use fix::aliases::si::{Centi, Milli};
 //! assert_eq!(Milli::new(0_300), Centi::new(0_30).convert());
 //! ```
 //!
-//! And we can, of course, choose a base-2 scale.
+//! We can also choose a base-2 scale just as easily.
 //!
 //! ```
 //! use fix::aliases::iec::{Kibi, Mebi};
 //! assert_eq!(Kibi::new(1024), Mebi::new(1).convert());
 //! ```
 //!
-//! It's also worth nothing that no implicit conversion is done for multiplication and division.
-//! The output type's scale is the result of the same operation on the input scales.
+//! It's also worth noting that the type-level scale changes when multiplying and dividing,
+//! avoiding any implicit conversion.
 //!
 //! ```
 //! use fix::aliases::iec::{Gibi, Kibi, Mebi};
