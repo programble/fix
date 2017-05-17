@@ -1,8 +1,16 @@
 [package]
 name = "fix"
-version = "0.0.0"
+version = "0.1.0"
+description = "Fixed-point number types"
 authors = ["Curtis McEnroe <programble@gmail.com>"]
+repository = "https://github.com/programble/fix"
 license = "ISC"
+readme = "README.md"
+keywords = ["fixed", "point", "number", "integer", "arithmetic"]
+categories = ["data-structures", "no-std"]
+
+[badges]
+travis-ci = { repository = "programble/fix" }
 
 [features]
 i128 = ["typenum/i128"]
