@@ -320,10 +320,10 @@ where Bits: Div<Output = Bits>, LExp: Sub<RExp> {
     }
 }
 
-impl<Bits, Base, LExp, RExp> Rem<Fix<Bits, Base, RExp>> for Fix<Bits, Base, LExp>
+impl<Bits, Base, Exp> Rem for Fix<Bits, Base, Exp>
 where Bits: Rem<Output = Bits> {
     type Output = Self;
-    fn rem(self, rhs: Fix<Bits, Base, RExp>) -> Self {
+    fn rem(self, rhs: Self) -> Self {
         Self::new(self.bits % rhs.bits)
     }
 }
@@ -442,7 +442,7 @@ mod tests {
 
     #[test]
     fn rem() {
-        assert_eq!(Kilo::new(1), Kilo::new(6) % Milli::new(5));
+        assert_eq!(Kilo::new(1), Kilo::new(6) % Kilo::new(5));
     }
 
     #[test]
