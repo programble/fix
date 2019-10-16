@@ -75,9 +75,7 @@ pub extern crate typenum;
 /// Type aliases.
 pub mod aliases;
 
-use core::cmp::{Eq, Ord, Ordering, PartialEq, PartialOrd};
 use core::fmt::{Debug, Error, Formatter};
-use core::hash::{Hash, Hasher};
 use core::marker::PhantomData;
 use core::ops::{AddAssign, DivAssign, MulAssign, RemAssign, SubAssign};
 use core::ops::{Add, Div, Mul, Neg, Rem, Sub};
@@ -114,6 +112,7 @@ use typenum::type_operators::{Abs, IsLess};
 /// - _(x B<sup>E</sup>) × y = (x × y) B<sup>E</sup>_
 /// - _(x B<sup>E</sup>) ÷ y = (x ÷ y) B<sup>E</sup>_
 /// - _(x B<sup>E</sup>) % y = (x % y) B<sup>E</sup>_
+#[derive(Copy, Clone, Default, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Fix<Bits, Base, Exp> {
     /// The underlying integer.
     pub bits: Bits,
@@ -225,56 +224,10 @@ mod __i128 {
 
 // The usual traits.
 
-impl<Bits, Base, Exp> Copy for Fix<Bits, Base, Exp> where Bits: Copy { }
-impl<Bits, Base, Exp> Clone for Fix<Bits, Base, Exp>
-where Bits: Clone {
-    fn clone(&self) -> Self {
-        Self::new(self.bits.clone())
-    }
-}
-
-impl<Bits, Base, Exp> Default for Fix<Bits, Base, Exp>
-where Bits: Default {
-    fn default() -> Self {
-        Self::new(Bits::default())
-    }
-}
-
-impl<Bits, Base, Exp> Hash for Fix<Bits, Base, Exp>
-where Bits: Hash {
-    fn hash<H>(&self, state: &mut H) where H: Hasher {
-        self.bits.hash(state);
-    }
-}
-
 impl<Bits, Base, Exp> Debug for Fix<Bits, Base, Exp>
 where Bits: Debug, Base: Unsigned, Exp: Integer {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         write!(f, "{:?}x{}^{}", self.bits, Base::to_u64(), Exp::to_i64())
-    }
-}
-
-// Comparison.
-
-impl<Bits, Base, Exp> Eq for Fix<Bits, Base, Exp> where Bits: Eq { }
-impl<Bits, Base, Exp> PartialEq for Fix<Bits, Base, Exp>
-where Bits: PartialEq {
-    fn eq(&self, rhs: &Self) -> bool {
-        self.bits == rhs.bits
-    }
-}
-
-impl<Bits, Base, Exp> PartialOrd for Fix<Bits, Base, Exp>
-where Bits: PartialOrd {
-    fn partial_cmp(&self, rhs: &Self) -> Option<Ordering> {
-        self.bits.partial_cmp(&rhs.bits)
-    }
-}
-
-impl<Bits, Base, Exp> Ord for Fix<Bits, Base, Exp>
-where Bits: Ord {
-    fn cmp(&self, rhs: &Self) -> Ordering {
-        self.bits.cmp(&rhs.bits)
     }
 }
 

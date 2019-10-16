@@ -16,4 +16,4 @@ travis-ci = { repository = "programble/fix" }
 i128 = ["typenum/i128"]
 
 [dependencies]
-typenum = "1.9.0"
+typenum = "1.11"
